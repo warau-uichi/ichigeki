@@ -152,7 +152,8 @@
 ## 8. その他 (Miscellaneous)
 
 ### **依存関係管理 (Dependency Management):**
-*   **`requirements.txt`:** 最小限の構成として、`pip freeze > requirements.txt` で生成されるファイルで依存関係を管理します。
-*   **`pyproject.toml` (推奨):** [Poetry](https://python-poetry.org/) や [PDM](https://pdm-project.org/) などのモダンな依存関係管理ツールを使用し、`pyproject.toml` で依存関係、開発用依存関係、プロジェクトメタデータなどを一元管理することを強く推奨します。これにより、再現性の高い開発環境の構築が容易になります。
+プロジェクトの Python パッケージ依存関係は `pyproject.toml` ファイルに記録することを推奨します (PEP 621 準拠)。
+パッケージのインストール、仮想環境の作成・管理には、高速な Python パッケージインストーラーである `uv` の使用を推奨します。`uv` は `pip` や `venv` の代替として機能し、開発ワークフローの効率化に貢献します。
+例えば、`uv venv` で仮想環境を作成し、`uv pip install -r requirements.txt` や `uv pip install <package>` (または `pyproject.toml` があれば `uv pip sync`) のようにして依存関係を管理します。
 
 以上
