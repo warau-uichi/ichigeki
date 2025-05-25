@@ -1,0 +1,53 @@
+version: '3.8' # Or a newer compatible version
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ichigekeen-dev # Optional: name the image
+    container_name: ichigekeen-dev-container # Optional: name the container
+    
+    # Mount the entire project directory to /app in the container
+    # This allows live code changes from the host to be reflected in the container
+    volumes:
+      - .:/app:cached # 'cached' can improve performance on macOS/Windows
+      # Persist command history (optional)
+      - dev_bash_history:/home/devuser/.bash_history 
+      # Mount X11 socket
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      # Mount Wayland socket if applicable
+      # - $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:rw
+    
+    # Set the working directory in the container
+    working_dir: /app
+    
+    # Keep the container running in the background
+    # tty: true and stdin_open: true can be useful for interactive shells
+    tty: true
+    stdin_open: true
+    # command: tail -f /dev/null # Keeps container running
+
+    # X11 Forwarding for GUI applications (like Pyxel)
+    # This requires host-side setup (e.g., running 'xhost +local:docker')
+    environment:
+      - DISPLAY=${DISPLAY}
+      # Add other potential X11 or Wayland related env vars if needed
+      # - QT_X11_NO_MITSHM=1 # Example for Qt apps
+      # - WAYLAND_DISPLAY=${WAYLAND_DISPLAY} # If using Wayland and it's configured
+
+    # (Optional) If your Dockerfile's non-root user 'devuser' (UID 1000) needs to match
+    # your host user's UID/GID to avoid permission issues with mounted volumes,
+    # you can specify user here. But this might require the UID/GID to be fixed
+    # or passed as build args to Dockerfile. For simplicity, we'll rely on the
+    # Dockerfile's user creation for now. If permission issues arise on volume
+    # mounts, this is an area to revisit.
+    # user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+
+    # (Optional) Port mapping if your application inside Docker serves on a port
+    # ports:
+    #   - "8000:8000"
+
+# Named volume for bash history persistence
+volumes:
+  dev_bash_history:
