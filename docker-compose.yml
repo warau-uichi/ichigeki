@@ -1,5 +1,3 @@
-version: '3.8' # Or a newer compatible version
-
 services:
   dev:
     build:
@@ -7,21 +5,22 @@ services:
       dockerfile: Dockerfile
     image: ichigekeen-dev # Optional: name the image
     container_name: ichigekeen-dev-container # Optional: name the container
-    
+
     # Mount the entire project directory to /app in the container
     # This allows live code changes from the host to be reflected in the container
     volumes:
       - .:/app:cached # 'cached' can improve performance on macOS/Windows
+      - /app/.venv
       # Persist command history (optional)
-      - dev_bash_history:/home/devuser/.bash_history 
+      - dev_bash_history:/home/devuser/.bash_history
       # Mount X11 socket
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       # Mount Wayland socket if applicable
       # - $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:rw
-    
+
     # Set the working directory in the container
     working_dir: /app
-    
+
     # Keep the container running in the background
     # tty: true and stdin_open: true can be useful for interactive shells
     tty: true
