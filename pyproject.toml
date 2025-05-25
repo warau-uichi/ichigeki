@@ -5,10 +5,14 @@ description = "A one-hit kill retro fighting game made with Pyxel."
 requires-python = ">=3.9"
 dependencies = [
     "pyxel>=1.9.0",  # Or a more specific version like "pyxel==1.9.15"
-    "ruff",          # Ruff is often updated, so keeping it flexible or pinning to a known good version
-    "coverage[toml]" # [toml] extra is good for pyproject.toml based config
 ]
 # Add other fields like authors, license later if desired
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "coverage[toml]"
+]
 
 [tool.ruff]
 line-length = 99

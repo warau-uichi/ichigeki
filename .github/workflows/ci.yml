@@ -27,10 +27,10 @@ jobs:
         # For simplicity, we'll assume uv run handles it or that the venv is implicitly used
         # by uv commands if present in the working directory.
         # The project dependencies are in pyproject.toml
-        uv pip sync --all-extras
+        uv pip install .[dev]
     - name: Install project in editable mode (for test discovery if needed)
       run: |
-        uv pip install -e .
+        uv pip install -e . --no-deps # Add --no-deps as dependencies are handled by the previous step
     - name: Lint with Ruff
       run: uv run ruff check .
     - name: Check formatting with Ruff
