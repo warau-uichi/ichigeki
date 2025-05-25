@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libsdl2-mixer-2.0-0 \
     libsdl2-ttf-2.0-0 \
     # xvfb is often needed for headless environments for GUI apps
-    # xvfb \ 
+    # xvfb \
     && rm -rf /var/lib/apt/lists/*
 
 # 4. Install uv
@@ -51,7 +51,7 @@ COPY --chown=devuser:devuser pyproject.toml ./
 # However, `uv` installed via `pip install uv` for root should be in PATH.
 # If not, one might need to adjust PATH or use `python -m uv ...`
 RUN uv venv --python python3.11 .venv && \
-    .venv/bin/uv pip sync --all-extras --no-cache --system-site-packages
+    uv pip install .[dev]
 # Add .venv/bin to PATH for subsequent commands in the Dockerfile and for the CMD/ENTRYPOINT
 ENV PATH="/app/.venv/bin:${PATH}"
 
