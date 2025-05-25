@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtualenv
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Pyxel specific (e.g. lock files, if any, during editing)
+# NOTE: .pyxres files are typically version controlled (part of game assets)
+# and should NOT be in .gitignore.
+# Adding .pyxres.lock as it might be a temporary lock file by an editor/tool.
+*.pyxres.lock
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Other common ignores
+*.log
+*.tmp
+*.bak
+*.orig

@@ -1,0 +1,37 @@
+[project]
+name = "Ichigekeen"
+version = "0.1.0"
+description = "A one-hit kill retro fighting game made with Pyxel."
+requires-python = ">=3.9"
+dependencies = [
+    "pyxel>=1.9.0",  # Or a more specific version like "pyxel==1.9.15"
+    "ruff",          # Ruff is often updated, so keeping it flexible or pinning to a known good version
+    "coverage[toml]" # [toml] extra is good for pyproject.toml based config
+]
+# Add other fields like authors, license later if desired
+
+[tool.ruff]
+line-length = 99
+select = [
+    "E",  # pycodestyle errors
+    "F",  # Pyflakes
+    "W",  # pycodestyle warnings
+    "I",  # isort
+    "UP", # pyupgrade
+    "PL", # Pylint
+    "C4", # flake8-comprehensions
+    "PT", # flake8-pytest-style
+    "SIM",# flake8-simplify
+    "TID",# flake8-tidy-imports
+    "ARG",# flake8-unused-arguments
+]
+ignore = []
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"] # Assuming 'src' is our main source directory
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"

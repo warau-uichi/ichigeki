@@ -1,0 +1,39 @@
+name: Python CI
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "main", "dev" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    - name: Install uv
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+      shell: bash
+    - name: Create virtual environment and install dependencies
+      run: |
+        uv venv --seed
+        # Activate venv for subsequent steps in this job if needed, or use `uv run`
+        # For simplicity, we'll assume uv run handles it or that the venv is implicitly used
+        # by uv commands if present in the working directory.
+        # The project dependencies are in pyproject.toml
+        uv pip sync --all-extras
+    - name: Install project in editable mode (for test discovery if needed)
+      run: |
+        uv pip install -e .
+    - name: Lint with Ruff
+      run: uv run ruff check .
+    - name: Check formatting with Ruff
+      run: uv run ruff format --check .
+    - name: Run tests
+      run: uv run python -m unittest discover -s tests -p 'test_*.py'

@@ -3,19 +3,19 @@
 このドキュメントは、「イチゲキーン」ゲーム開発の進捗を追跡するための詳細なToDoリストです。
 
 ## I. プロジェクトセットアップと基本環境 (Project Setup & Basic Environment)
-- [ ] Gitリポジトリの初期化 (`git init`)
-- [ ] 基本プロジェクト構造の作成 (`src` (ゲームコード用)、`docs`、`tests`、`assets` (リソースファイル用 `.pyxres` 格納想定) フォルダなど)
-- [ ] Python仮想環境のセットアップ (`uv venv` または `python -m venv .venv` を推奨)
-- [ ] 作成した仮想環境フォルダ (`.venv` など) を `.gitignore` に追加
-- [ ] `pyproject.toml` の作成と基本情報 (プロジェクト名「イチゲキーン」、バージョン「0.1.0」、Python要件「>=3.9」など) の記述 (PEP 621 準拠)
-- [ ] 初期依存パッケージのインストール (`uv pip install pyxel ruff coverage` または `pip install pyxel ruff coverage`) と `pyproject.toml` への記録 (または `requirements.txt` の作成と更新)
-- [ ] Ruff の設定 (`pyproject.toml` 内または `ruff.toml`): PEP 8準拠、行長制限 (例: 88文字または99文字)、使用ルールセット設定 (例: `select = ["E", "F", "W", "I", "UP", "PL"]`)
-- [ ] `.gitignore` ファイルの作成 (Python (`__pycache__/`, `*.pyc`), Pyxel (`*.pyxres.lock`), OS固有ファイル (`.DS_Store` など) を含む)
-- [ ] GitHub Actions: CIワークフローファイルの雛形作成 (`.github/workflows/ci.yml`)
-    - [ ] Pythonセットアップのステップ (使用するPythonバージョンを指定)
-    - [ ] `uv` (または `pip`) による依存パッケージインストールのステップ
-    - [ ] Ruff (lint & format check) のステップ
-    - [ ] `unittest` 実行のステップ (初期はスタブでも可)
+- [x] Gitリポジトリの初期化 (`git init`)
+- [x] 基本プロジェクト構造の作成 (`src` (ゲームコード用)、`docs`、`tests`、`assets` (リソースファイル用 `.pyxres` 格納想定) フォルダなど)
+- [x] Python仮想環境のセットアップ (`uv venv` または `python -m venv .venv` を推奨)
+- [x] 作成した仮想環境フォルダ (`.venv` など) を `.gitignore` に追加
+- [x] `pyproject.toml` の作成と基本情報 (プロジェクト名「イチゲキーン」、バージョン「0.1.0」、Python要件「>=3.9」など) の記述 (PEP 621 準拠)
+- [x] 初期依存パッケージのインストール (`uv pip install pyxel ruff coverage` または `pip install pyxel ruff coverage`) と `pyproject.toml` への記録 (または `requirements.txt` の作成と更新)
+- [x] Ruff の設定 (`pyproject.toml` 内または `ruff.toml`): PEP 8準拠、行長制限 (例: 88文字または99文字)、使用ルールセット設定 (例: `select = ["E", "F", "W", "I", "UP", "PL"]`)
+- [x] `.gitignore` ファイルの作成 (Python (`__pycache__/`, `*.pyc`), Pyxel (`*.pyxres.lock`), OS固有ファイル (`.DS_Store` など) を含む)
+- [x] GitHub Actions: CIワークフローファイルの雛形作成 (`.github/workflows/ci.yml`)
+    - [x] Pythonセットアップのステップ (使用するPythonバージョンを指定)
+    - [x] `uv` (または `pip`) による依存パッケージインストールのステップ
+    - [x] Ruff (lint & format check) のステップ
+    - [x] `unittest` 実行のステップ (初期はスタブでも可)
 
 ## II. ゲームエンジンの初期設定と基本表示 (Game Engine Init & Basic Display) - (GAME_SPEC Stage 1準拠)
 - [ ] Pyxel初期化処理の実装 (`pyxel.init`): 画面サイズ (256x192), FPS (30), ウィンドウタイトル「イチゲキーン」
