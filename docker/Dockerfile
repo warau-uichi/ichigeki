@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libsdl2-mixer-2.0-0 \
     libsdl2-ttf-2.0-0 \
     # xvfb is often needed for headless environments for GUI apps
-    # xvfb \
+    xvfb \
     && rm -rf /var/lib/apt/lists/*
 
 # 4. Install uv
@@ -44,7 +44,7 @@ ENV PATH="/app/.venv/bin:${PATH}"
 # 8. Copy Remaining Project Code (Optional)
 # For development, the rest of the code is typically mounted.
 # If building an image for deployment, you would uncomment the following:
-# COPY --chown=devuser:devuser . .
+COPY --chown=devuser:devuser . .
 
 # Default command (can be overridden in docker-compose.yml or docker run)
 # CMD ["python", "src/main.py"]
