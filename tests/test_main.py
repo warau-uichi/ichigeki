@@ -11,18 +11,20 @@ class MockPyxel:
     def __init__(self):
         self.KEY_A = 10  # Assign arbitrary unique values for keys
         self.KEY_D = 11
+        self.KEY_LEFT = 12
+        self.KEY_RIGHT = 13
+        self.KEY_F = 14
         self.width = 256
         self.height = 192
         self._btn_states = {}
+        self._btnp_states = {} # For btnp, can be more sophisticated if needed
 
     def init(self, width, height, title=None, fps=None):
         self.width = width
         self.height = height
         # title and fps are ignored in the mock implementation
-        # print(f"Pyxel init: {width}x{height}, title='{title}', fps={fps}")
 
     def load(self, filename):
-        # print(f"Pyxel load: {filename}")
         pass
 
     def cls(self, color):
@@ -31,11 +33,23 @@ class MockPyxel:
     def rect(self, x, y, w, h, color):
         pass
 
+    def bltm(self, x, y, tm, u, v, w, h, colkey=None): # Added colkey
+        pass
+
+    def blt(self, x, y, img, u, v, w, h, colkey=None): # Added colkey
+        pass
+
     def btn(self, key):
         return self._btn_states.get(key, False)
 
+    def btnp(self, key, hold=None, period=None): # Added hold and period params
+        # Simple mock: behaves like btn for testing, or can be made more complex
+        return self._btnp_states.get(key, False)
+
+    def play(self, ch, snd, loop=False): # Added loop param
+        pass
+
     def run(self, update_func, draw_func):
-        # print("pyxel.run called")
         pass
 
 
