@@ -64,11 +64,24 @@ Using a virtual environment is strongly recommended to isolate project dependenc
 
 ### 3. Running the Game
 
-*   **Execute the main script:**
-    Once Pyxel is installed (either via `pipx` or into your active virtual environment) and any other necessary dependencies are installed in your venv, you can run the game application from the project root using:
+*   **Activate your virtual environment and run the script:**
+    First, ensure your virtual environment is activated (e.g., `source .venv/bin/activate` on macOS/Linux or `.venv\Scripts\activate.bat` on Windows CMD).
+    Also, ensure Pyxel is installed (as described in section "2. Setup Virtual Environment and Install Dependencies").
+
+    Then, from your project's root directory (the one containing the `src` and `assets` folders), the recommended way to run the game is using `uv run`:
+    ```bash
+    uv run python src/main.py
+    ```
+    This command uses `uv` to execute `python src/main.py` within the context of your project's configured environment.
+
+*   **Alternative using direct Python execution:**
+    If you prefer, after activating your virtual environment and ensuring Pyxel is installed, you can also directly use `python`:
     ```bash
     python src/main.py
     ```
+
+*   **Note on `pyxel run` command:**
+    The `pyxel run src/main.py` command is available via Pyxel. However, it can sometimes cause issues with how paths to assets are resolved due to the way it handles the script's execution context. For this project, please prefer using `uv run python src/main.py` or `python src/main.py` from the project root.
 
 *   **Graphical Environment Notes:**
     Pyxel is a graphical library and requires a desktop environment to run.
