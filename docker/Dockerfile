@@ -41,10 +41,16 @@ RUN uv venv --python python3.11 .venv && \
     uv pip install .[dev]
 ENV PATH="/app/.venv/bin:${PATH}"
 
-# 8. Copy Remaining Project Code (Optional)
+# 8. Copy Xvfb script
+COPY --chown=devuser:devuser docker/run_with_xvfb.sh /usr/local/bin/
+
+# 9. Copy Remaining Project Code (Optional)
 # For development, the rest of the code is typically mounted.
 # If building an image for deployment, you would uncomment the following:
 COPY --chown=devuser:devuser . .
+
+# Set the entrypoint to use Xvfb
+ENTRYPOINT ["/usr/local/bin/run_with_xvfb.sh"]
 
 # Default command (can be overridden in docker-compose.yml or docker run)
 # CMD ["python", "src/main.py"]
