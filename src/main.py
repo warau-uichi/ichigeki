@@ -39,11 +39,13 @@ class Game:
         # Pyxel初期化処理
         pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="イチゲキーン", fps=30)
         # Determine the absolute path to the assets directory
-        # __file__ is the path to the current script (e.g., /path/to/project/src/main.py)
-        # os.path.dirname(__file__) is the directory of the script (e.g., /path/to/project/src)
-        # os.path.join(script_dir, '..') goes one level up to the project root
-        script_dir = os.path.dirname(__file__)
-        asset_path = os.path.abspath(os.path.join(script_dir, "..", "assets", "game.pyxres"))
+        script_path = os.path.abspath(__file__)      # Absolute path to this script e.g., /path/to/project/src/main.py
+        script_dir = os.path.dirname(script_path)    # Directory of this script e.g., /path/to/project/src
+        project_root = os.path.dirname(script_dir)   # Project root e.g., /path/to/project
+        asset_path = os.path.join(project_root, "assets", "game.pyxres") # e.g., /path/to/project/assets/game.pyxres
+
+        # The debug print can be kept for one more verification or removed. Let's keep it for now.
+        print(f"Attempting to load asset from: {asset_path}") # DEBUG LINE
         pyxel.load(asset_path)
 
         # Expose properties for testing
