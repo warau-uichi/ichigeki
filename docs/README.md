@@ -18,13 +18,13 @@
     - [x] `unittest` 実行のステップ (初期はスタブでも可)
 
 ## II. ゲームエンジンの初期設定と基本表示 (Game Engine Init & Basic Display) - (GAME_SPEC Stage 1準拠)
-- [ ] Pyxel初期化処理の実装 (`pyxel.init`): 画面サイズ (256x192), FPS (30), ウィンドウタイトル「イチゲキーン」
-- [ ] メインゲームループ (`update`, `draw` 関数、`pyxel.run`) の基本構造作成 (例: `src/main.py` に配置)
-- [ ] Pyxelリソースファイル (`assets/game.pyxres` など) の作成 (Pyxel Editorを使用) とプロジェクトへのロード設定 (`pyxel.load("assets/game.pyxres")`)
-- [ ] プレースホルダープレイヤー1スプライトの作成 (Pyxel Editorで単色矩形など) と `.pyxres` のイメージバンク0に保存
-- [ ] プレイヤー1を画面中央付近に描画する処理 (`pyxel.blt`)
-- [ ] プレイヤー1の基本的な左右移動ロジック (キー入力: `pyxel.KEY_A` (左), `pyxel.KEY_D` (右), `pyxel.btn()` を使用)
-- [ ] プレイヤー1が画面境界を越えないようにする処理 (x座標の値をクランプする)
+- [x] Pyxel初期化処理の実装 (`pyxel.init`): 画面サイズ (256x192), FPS (30), ウィンドウタイトル「イチゲキーン」
+- [x] メインゲームループ (`update`, `draw` 関数、`pyxel.run`) の基本構造作成 (例: `src/main.py` に配置)
+- [x] Pyxelリソースファイル (`assets/game.pyxres` など) の作成 (Pyxel Editorを使用) とプロジェクトへのロード設定 (`pyxel.load("assets/game.pyxres")`)
+- [x] プレースホルダープレイヤー1スプライトの作成 (Pyxel Editorで単色矩形など) と `.pyxres` のイメージバンク0に保存
+- [x] プレイヤー1を画面中央付近に描画する処理 (`pyxel.blt`)
+- [x] プレイヤー1の基本的な左右移動ロジック (キー入力: `pyxel.KEY_A` (左), `pyxel.KEY_D` (右), `pyxel.btn()` を使用)
+- [x] プレイヤー1が画面境界を越えないようにする処理 (x座標の値をクランプする)
 
 ## III. アセット作成 (Asset Creation) - (GAME_SPEC Visual & Audio Style準拠)
 - [ ] **ステージ関連 (Pyxel Editor):**
