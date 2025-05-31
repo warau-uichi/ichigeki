@@ -1,39 +1,27 @@
-name: Python CI
+name: CI
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main", "dev" ]
+    branches: [ main ]
+  workflow_dispatch: # Allows manual triggering
 
 jobs:
-  build:
+  build_and_test_docker:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-    - name: Install uv
-      run: |
-        curl -LsSf https://astral.sh/uv/install.sh | sh
-        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
-      shell: bash
-    - name: Create virtual environment and install dependencies
-      run: |
-        uv venv --seed
-        # Activate venv for subsequent steps in this job if needed, or use `uv run`
-        # For simplicity, we'll assume uv run handles it or that the venv is implicitly used
-        # by uv commands if present in the working directory.
-        # The project dependencies are in pyproject.toml
-        uv pip install .[dev]
-    - name: Install project in editable mode (for test discovery if needed)
-      run: |
-        uv pip install -e . --no-deps # Add --no-deps as dependencies are handled by the previous step
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build Docker image
+      run: docker-compose -f docker/docker-compose.yml build dev
+
     - name: Lint with Ruff
-      run: uv run ruff check .
+      run: docker-compose -f docker/docker-compose.yml run --rm dev uv run ruff check .
+
     - name: Check formatting with Ruff
-      run: uv run ruff format --check .
+      run: docker-compose -f docker/docker-compose.yml run --rm dev uv run ruff format --check .
+
     - name: Run tests
-      run: uv run python -m unittest discover -s tests -p 'test_*.py'
+      run: docker-compose -f docker/docker-compose.yml run --rm dev uv run python -m unittest discover -s tests -p 'test_*.py'
