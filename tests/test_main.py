@@ -33,10 +33,10 @@ class MockPyxel:
     def rect(self, x, y, w, h, color):
         pass
 
-    def bltm(self, x, y, tm, u, v, w, h, colkey=None): # Added colkey
+    def bltm(self, *args, **kwargs): # Changed signature
         pass
 
-    def blt(self, x, y, img, u, v, w, h, colkey=None): # Added colkey
+    def blt(self, *args, **kwargs): # Changed signature
         pass
 
     def btn(self, key):

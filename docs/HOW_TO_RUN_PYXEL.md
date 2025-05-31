@@ -65,6 +65,9 @@ Using a virtual environment is strongly recommended to isolate project dependenc
     *   **Linux:** Ensure an X11 display server is running. If you are in a headless environment (like a server without a monitor), X11 forwarding (e.g., via SSH) or a virtual framebuffer like Xvfb will be necessary.
     *   **Windows & macOS:** This is generally handled automatically by the operating system, as they are inherently graphical.
 
+**Note on Asset Generation Scripts:**
+You might notice several Python scripts in the project's root directory (e.g., `create_pyxel_resource.py`, `add_player_sprites.py`). These scripts were used by the developers to programmatically create and populate the `assets/game.pyxres` file. You **do not** need to run these scripts to play or run the game. The game (`src/main.py`) directly uses the `assets/game.pyxres` file, which already contains all necessary assets.
+
 ---
 
 ## Dockerコンテナ内でPyxelゲームを実行する方法
