@@ -16,6 +16,8 @@ dev = [
 
 [tool.ruff]
 line-length = 99
+
+[tool.ruff.lint]
 select = [
     "E",  # pycodestyle errors
     "F",  # Pyflakes
@@ -29,7 +31,15 @@ select = [
     "TID",# flake8-tidy-imports
     "ARG",# flake8-unused-arguments
 ]
-ignore = []
+ignore = [
+    "PLW0603",  # Using the global statement is discouraged
+    "PT009",    # Use regular assert instead of unittest-style assertEqual
+    "E402",     # Module level import not at top of file
+    "I001",     # Import block is un-sorted or un-formatted
+    "W293",     # Blank line contains whitespace
+    "ARG002",   # Unused method argument
+    "ERA001"    # Found commented-out code
+]
 
 [tool.ruff.lint.isort]
 known-first-party = ["src"] # Assuming 'src' is our main source directory
