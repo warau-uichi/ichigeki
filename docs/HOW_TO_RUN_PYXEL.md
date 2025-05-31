@@ -1,6 +1,6 @@
 # How to Run Pyxel Games
 
-This document explains how to run Pyxel games, either locally or using Docker.
+This document explains how to run Pyxel games locally.
 
 ## Running Locally (Without Docker)
 
@@ -39,23 +39,33 @@ Using a virtual environment is strongly recommended to isolate project dependenc
         .venv\Scripts\Activate.ps1
         ```
 
-*   **Install dependencies:**
-    The main runtime dependency for this project is Pyxel. Development tools like Ruff (for linting) and Coverage (for test coverage) are typically listed in `pyproject.toml`.
-    *   To install Pyxel (and common development tools):
-        ```bash
-        # Using uv
-        uv pip install pyxel ruff coverage
+*   **Install Dependencies:**
 
-        # Or using pip
-        pip install pyxel ruff coverage
-        ```
+    #### Installing Pyxel on macOS (Recommended)
+    For macOS, it's recommended to install Pyxel using `pipx` for a clean global installation:
+    1. Install Homebrew (if you don't have it): `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+    2. Install pipx: `brew install pipx`
+    3. Ensure pipx is in your path: `pipx ensurepath`
+    4. Install Pyxel: `pipx install pyxel`
+
+    After this, Pyxel is available system-wide. You can then run the game using `python src/main.py` from the project root. If you use other development tools like `ruff` or `coverage` (which are typically installed in your project's virtual environment), ensure that virtual environment is active when you use those tools. Pyxel itself will be run from the `pipx` environment.
+
+    #### Installing Pyxel into a Virtual Environment (All OS)
+    Alternatively, on any OS (including macOS, Linux, Windows), you can install Pyxel directly into your project's virtual environment along with other development tools:
+    (Ensure your virtual environment is active before running these commands)
+    ```bash
+    # Using uv
+    uv pip install pyxel ruff coverage
+
+    # Or using pip
+    pip install pyxel ruff coverage
+    ```
     *   Note: If your project has a `pyproject.toml` with dependencies specified, you might also be able to install them using `uv pip install -e .` (for main dependencies) or `uv pip install -e .[dev]` (if a "dev" extra is defined). For this guide, we'll stick to explicit package installation.
-
 
 ### 3. Running the Game
 
 *   **Execute the main script:**
-    Once the virtual environment is active and dependencies are installed, you can run the game application using:
+    Once Pyxel is installed (either via `pipx` or into your active virtual environment) and any other necessary dependencies are installed in your venv, you can run the game application from the project root using:
     ```bash
     python src/main.py
     ```
@@ -69,83 +79,4 @@ Using a virtual environment is strongly recommended to isolate project dependenc
 You might notice several Python scripts in the project's root directory (e.g., `create_pyxel_resource.py`, `add_player_sprites.py`). These scripts were used by the developers to programmatically create and populate the `assets/game.pyxres` file. You **do not** need to run these scripts to play or run the game. The game (`src/main.py`) directly uses the `assets/game.pyxres` file, which already contains all necessary assets.
 
 ---
-
-## Dockerコンテナ内でPyxelゲームを実行する方法
-
-このドキュメントでは、ホストマシンからDockerコンテナ内でPyxelゲームを実行する方法を説明します。
-
-## 前提条件
-
-- Dockerがインストールされていること
-- プロジェクトのDockerイメージがビルドされていること
-
-## Docker環境のセットアップ
-
-まず、Dockerコンテナを起動します：
-
-```bash
-cd /Users/yosukeikei/Projects/ichigeki
-docker compose -f docker/docker-compose.yml up -d
-```
-
-## 仕組みの説明
-
-Pyxelはグラフィカルな環境を必要としますが、Dockerコンテナにはデフォルトでグラフィカルな環境がありません。ホスト側で表示するためには、X11フォワーディングなどの方法が必要です。
-
-## ホスト側でゲームをプレイする方法
-
-Dockerコンテナ内で実行されるPyxelゲームをホスト側で表示・プレイするには、以下の方法があります。
-
-### X11フォワーディングを使用する方法
-
-macOSでは、XQuartzを使用してX11フォワーディングを設定できます：
-
-1. XQuartzをインストールします：
-```bash
-brew install --cask xquartz
-```
-
-2. XQuartzを起動し、環境設定で「リモート接続を許可」をオンにします。
-```bash
-open -a XQuartz
-```
-
-3. XQuartzを再起動します。
-
-4. Docker環境変数を変更します。docker-compose.ymlファイルの`DISPLAY`環境変数を`host.docker.internal:0`に設定します：
-```yaml
-environment:
-  - DISPLAY=host.docker.internal:0
-```
-
-5. Dockerコンテナを再起動します：
-```bash
-docker compose -f docker/docker-compose.yml down
-docker compose -f docker/docker-compose.yml up -d
-```
-
-6. プロジェクトに含まれる`run_pyxel_on_host.sh`スクリプトを使用して、ゲームを実行します：
-```bash
-./run_pyxel_on_host.sh src/main.py
-```
-
-この方法では、ゲームの画面がホスト側のXQuartzウィンドウに表示され、キー入力も可能になります。
-
-## トラブルシューティング
-
-### エラー: Failed to create window
-
-このエラーが発生した場合、以下を確認してください：
-
-1. XQuartzが正しく起動しているか
-2. XQuartzの環境設定で「リモート接続を許可」がオンになっているか
-3. Docker環境変数の`DISPLAY`が正しく設定されているか
-4. Dockerコンテナの再起動後にXQuartzも再起動したか
-
-### その他のエラー
-
-他のエラーが発生した場合は、`RUST_BACKTRACE=1`環境変数を設定してより詳細なエラー情報を取得してください：
-
-```bash
-docker exec -it ichigekeen-dev-container bash -c "RUST_BACKTRACE=1 python -m pyxel run src/main.py"
-```
+This is the recommended method for playing the game. The Docker environment is preserved for development and automated testing purposes.
