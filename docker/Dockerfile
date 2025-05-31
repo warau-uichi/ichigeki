@@ -15,9 +15,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # 4. Install uv
-# Using RUN for pip install uv as curl method might have issues with PATH setup in non-interactive Docker build
-# If the curl method is preferred and works in the target CI, it can be used.
-# For now, using pip to ensure uv is available for subsequent RUN commands directly.
 RUN pip install uv
 
 # 5. Create Non-Root User
@@ -38,21 +35,10 @@ USER $USERNAME
 WORKDIR /app
 
 # 7. Copy Project Files & Install Dependencies
-# Copy pyproject.toml first to leverage Docker layer caching for dependencies
 COPY --chown=devuser:devuser pyproject.toml ./
-# If a uv.lock file is generated and used, it should be copied too:
 # COPY --chown=devuser:devuser uv.lock ./
-
-# Create virtual environment, install dependencies, and ensure the venv is in PATH
-# Using the full path to the `uv` installed by pip for the devuser
-# The `uv` installed via pip for root might not be in PATH for devuser immediately.
-# A more robust way is to ensure uv is in a system-wide accessible PATH or re-login,
-# but for Dockerfile, specifying the path can be more direct if needed.
-# However, `uv` installed via `pip install uv` for root should be in PATH.
-# If not, one might need to adjust PATH or use `python -m uv ...`
 RUN uv venv --python python3.11 .venv && \
     uv pip install .[dev]
-# Add .venv/bin to PATH for subsequent commands in the Dockerfile and for the CMD/ENTRYPOINT
 ENV PATH="/app/.venv/bin:${PATH}"
 
 # 8. Copy Remaining Project Code (Optional)
@@ -61,5 +47,4 @@ ENV PATH="/app/.venv/bin:${PATH}"
 # COPY --chown=devuser:devuser . .
 
 # Default command (can be overridden in docker-compose.yml or docker run)
-# For a development server, this might be `python src/main.py` or similar
 # CMD ["python", "src/main.py"]

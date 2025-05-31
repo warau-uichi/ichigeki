@@ -1,0 +1,23 @@
+services:
+  dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: ichigekeen-dev
+    container_name: ichigekeen-dev-container
+    volumes:
+      - ..:/app:cached
+      - dev_venv:/app/.venv
+      - dev_bash_history:/home/devuser/.bash_history
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    environment:
+      - DISPLAY=${DISPLAY}
+      # - QT_X11_NO_MITSHM=1
+      # - WAYLAND_DISPLAY=${WAYLAND_DISPLAY}
+# Named volume for bash history persistence
+volumes:
+  dev_bash_history:
+  dev_venv:
