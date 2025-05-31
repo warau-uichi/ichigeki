@@ -1,4 +1,5 @@
 import sys
+import os
 
 import pyxel
 
@@ -37,7 +38,13 @@ class Game:
 
         # Pyxel初期化処理
         pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="イチゲキーン", fps=30)
-        pyxel.load("assets/game.pyxres")
+        # Determine the absolute path to the assets directory
+        # __file__ is the path to the current script (e.g., /path/to/project/src/main.py)
+        # os.path.dirname(__file__) is the directory of the script (e.g., /path/to/project/src)
+        # os.path.join(script_dir, '..') goes one level up to the project root
+        script_dir = os.path.dirname(__file__)
+        asset_path = os.path.abspath(os.path.join(script_dir, "..", "assets", "game.pyxres"))
+        pyxel.load(asset_path)
 
         # Expose properties for testing
         self.setup_globals()
