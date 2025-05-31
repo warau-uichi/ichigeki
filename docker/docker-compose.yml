@@ -12,11 +12,13 @@ services:
     working_dir: /app
     tty: true
     stdin_open: true
-    environment:
-      # 以下はXvfbを使用する場合のみ有効
-      # - DISPLAY=:99
-      # - QT_X11_NO_MITSHM=1
-      # - WAYLAND_DISPLAY=${WAYLAND_DISPLAY}
+    environment: {} # Default empty environment
+    # For Xvfb, you might set variables like these,
+    # but run_with_xvfb.sh typically handles DISPLAY.
+    # Consider these if directly running X applications in the container:
+    # DISPLAY: ":99"
+    # QT_X11_NO_MITSHM: "1"
+    # WAYLAND_DISPLAY: "${WAYLAND_DISPLAY}" # If Wayland is involved
     command: bash
 # Named volume for bash history persistence
 volumes:
