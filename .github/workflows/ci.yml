@@ -26,4 +26,4 @@ jobs:
 
     # Temporarily allow test failures until we can update the tests
     - name: Run tests
-      run: docker compose -f docker/docker-compose.yml run --rm -e HOME=/tmp dev uv run python -m unittest discover -s tests -p 'test_*.py' || echo "Tests failed, but continuing workflow"
+      run: docker compose -f docker/docker-compose.yml run --rm -e HOME=/tmp dev uv run python -m unittest discover -s tests -p 'test_*.py'
