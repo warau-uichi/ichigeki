@@ -140,6 +140,27 @@ def main():
             tm.set(x, SCREEN_HEIGHT_TILES - 1 - y_ground_offset, [str(TILE_FOREST_GROUND_IDX)])
     print(f"Created forest ground platform in tilemap 0 with tile ({TILE_FOREST_GROUND_IDX}).")
 
+    # --- Start Internal Tilemap Debug Inspection ---
+    print("DEBUG: Internally inspecting tilemap 0 data BEFORE saving...")
+    # Ensure tm is the correct tilemap object, it should be pyxel.tilemaps[0]
+    # If tm was a local variable in a previous scope, re-get it:
+    # tm_debug = pyxel.tilemaps[0]
+    # However, tm should still be in scope if defined earlier in main()
+    # Assuming 'tm' (pyxel.tilemaps[0]) is still in scope and correctly modified:
+    try:
+        # tm was defined as: tm = pyxel.tilemaps[0]
+        debug_tile_val_0_0 = tm.pget(0, 0) # Expected TILE_SKY_IDX (5), which is tile at (40,0) in image bank
+        print(f"DEBUG: Internal pget(0,0) (sky): {debug_tile_val_0_0}")
+
+        debug_tile_val_0_23 = tm.pget(0, 23) # Expected TILE_FOREST_GROUND_IDX (2), which is tile at (16,0)
+        print(f"DEBUG: Internal pget(0,23) (ground): {debug_tile_val_0_23}")
+
+        debug_tile_val_5_18 = tm.pget(5, 18) # Expected TILE_TREE_TRUNK_IDX (3), which is tile at (24,0)
+        print(f"DEBUG: Internal pget(5,18) (tree trunk): {debug_tile_val_5_18}")
+
+    except Exception as e:
+        print(f"DEBUG: Error during internal pget: {e}")
+    print("DEBUG: --- End Internal Tilemap Debug Inspection ---")
     # --- Save the resource file ---
     # The pyxel.save() function automatically saves to the path used in pyxel.load()
     # or if not loaded, to a path derived from the script name if init was used
