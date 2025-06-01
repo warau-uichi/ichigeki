@@ -61,6 +61,25 @@ class Game:
             tile_val = tm.pget(tx, ty)
             print(f"DEBUG: Tile at ({tx},{ty}) ({desc}): {tile_val}")
         print("DEBUG: --- End Tilemap Debug Inspection ---")
+        # --- Start Image Bank Debug Inspection ---
+        print("DEBUG: Inspecting loaded image bank 0 pixel data...")
+        img_bank = pyxel.images[0]
+        # Coordinates for new tiles in image bank 0:
+        # TILE_FOREST_GROUND_IDX = 2 (at 16,0) -> Expected colors: 4 (Brown) or 3 (Dark Green)
+        # TILE_TREE_TRUNK_IDX = 3 (at 24,0) -> Expected color: 4 (Brown)
+        # TILE_TREE_LEAVES_IDX = 4 (at 32,0) -> Expected colors: 11 (Light Green) or 3 (Dark Green)
+        # TILE_SKY_IDX = 5 (at 40,0) -> Expected color: 12 (Light Blue)
+
+        coords_to_check_img = {
+            "Sky tile pixel (40,0)": (40,0),      # Expected: COLOR_SKY (12)
+            "Sky tile pixel (43,3)": (43,3),      # Expected: COLOR_SKY (12)
+            "Forest ground pixel (16,0)": (16,0), # Expected: COLOR_FOREST_GROUND_PRIMARY/SECONDARY (4 or 3)
+            "Tree trunk pixel (24,0)": (24,0),    # Expected: COLOR_TREE_TRUNK (4)
+        }
+        for desc, (px, py) in coords_to_check_img.items():
+            pixel_val = img_bank.pget(px, py)
+            print(f"DEBUG: Image bank 0 pixel at ({px},{py}) ({desc}): {pixel_val}")
+        print("DEBUG: --- End Image Bank Debug Inspection ---")
 
         # Expose properties for testing
         self.setup_globals()
@@ -98,7 +117,7 @@ class Game:
         player_x = self.player_x
 
     def draw(self):
-        pyxel.cls(7)  # Clear screen with white (for debugging tilemap drawing)
+        pyxel.cls(0)  # Clear screen with black (optional if tilemap covers all)
 
         # Draw the stage tilemap (tilemap 0)
         # bltm(x, y, tm, u, v, w, h, [colkey])
