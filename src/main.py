@@ -98,7 +98,7 @@ class Game:
         player_x = self.player_x
 
     def draw(self):
-        pyxel.cls(0)  # Clear screen with black (optional if tilemap covers all)
+        pyxel.cls(7)  # Clear screen with white (for debugging tilemap drawing)
 
         # Draw the stage tilemap (tilemap 0)
         # bltm(x, y, tm, u, v, w, h, [colkey])
