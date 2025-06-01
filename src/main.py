@@ -44,9 +44,6 @@ class Game:
         project_root = os.path.dirname(script_dir)   # Abs path to project root.
         # Construct path to assets file, e.g., /path/to/project/assets/game.pyxres
         asset_path = os.path.join(project_root, "assets", "game.pyxres")
-
-        # The debug print can be kept for one more verification or removed. Let's keep it for now.
-        print(f"Attempting to load asset from: {asset_path}") # DEBUG LINE
         pyxel.load(asset_path)
 
         # Expose properties for testing
