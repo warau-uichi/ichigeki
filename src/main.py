@@ -45,6 +45,22 @@ class Game:
         # Construct path to assets file, e.g., /path/to/project/assets/game.pyxres
         asset_path = os.path.join(project_root, "assets", "game.pyxres")
         pyxel.load(asset_path)
+        # --- Start Tilemap Debug Inspection ---
+        print("DEBUG: Inspecting loaded tilemap 0 data...")
+        tm = pyxel.tilemaps[0]
+        # Sample points: expected sky, tree, ground
+        coords_to_check = {
+            "Top-left sky (0,0)": (0,0),
+            "Mid-sky (15,10)": (15,10),
+            "Tree top (5,15)": (5,15), # Expected: TILE_TREE_LEAVES_IDX (4)
+            "Tree trunk (5,18)": (5,18), # Expected: TILE_TREE_TRUNK_IDX (3)
+            "Ground (0,23)": (0,23),   # Expected: TILE_FOREST_GROUND_IDX (2)
+            "Ground (15,22)": (15,22)  # Expected: TILE_FOREST_GROUND_IDX (2)
+        }
+        for desc, (tx, ty) in coords_to_check.items():
+            tile_val = tm.pget(tx, ty)
+            print(f"DEBUG: Tile at ({tx},{ty}) ({desc}): {tile_val}")
+        print("DEBUG: --- End Tilemap Debug Inspection ---")
 
         # Expose properties for testing
         self.setup_globals()
