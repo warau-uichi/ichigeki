@@ -79,35 +79,27 @@ def main():
     # Existing print statement for old tiles will be overwritten effectively by the new one if we replace it,
     # or we can have multiple print statements. Let's keep it simple and let the new print statement reflect the latest action.
 
-    # TILE_FOREST_GROUND_IDX (index 2) at (16,0)
-    # Mottled brown/dark green
+    # TILE_FOREST_GROUND_IDX (index 2) at (16,0) - Mottled
     tile_x_start = 16
-    for y_offset in range(8):
-        for x_offset in range(8):
-            col = COLOR_FOREST_GROUND_PRIMARY if (x_offset + y_offset) % 2 == 0 else COLOR_FOREST_GROUND_SECONDARY
-            img_bank.pset(tile_x_start + x_offset, 0 + y_offset, col)
+    for r in range(8):  # row
+        for c in range(8):  # column
+            color = COLOR_FOREST_GROUND_PRIMARY if (c + r) % 2 == 0 else COLOR_FOREST_GROUND_SECONDARY
+            img_bank.pset(tile_x_start + c, 0 + r, color)
 
-    # TILE_TREE_TRUNK_IDX (index 3) at (24,0)
-    # Solid dark brown
+    # TILE_TREE_TRUNK_IDX (index 3) at (24,0) - Solid
     tile_x_start = 24
-    for y_offset in range(8):
-        for x_offset in range(8):
-            img_bank.pset(tile_x_start + x_offset, 0 + y_offset, COLOR_TREE_TRUNK)
+    img_bank.rect(tile_x_start, 0, 8, 8, COLOR_TREE_TRUNK)
 
-    # TILE_TREE_LEAVES_IDX (index 4) at (32,0)
-    # Mottled light/dark green
+    # TILE_TREE_LEAVES_IDX (index 4) at (32,0) - Mottled
     tile_x_start = 32
-    for y_offset in range(8):
-        for x_offset in range(8):
-            col = COLOR_TREE_LEAVES_PRIMARY if (x_offset + y_offset) % 2 == 0 else COLOR_TREE_LEAVES_SECONDARY
-            img_bank.pset(tile_x_start + x_offset, 0 + y_offset, col)
+    for r in range(8):  # row
+        for c in range(8):  # column
+            color = COLOR_TREE_LEAVES_PRIMARY if (c + r) % 2 == 0 else COLOR_TREE_LEAVES_SECONDARY
+            img_bank.pset(tile_x_start + c, 0 + r, color)
 
-    # TILE_SKY_IDX (index 5) at (40,0)
-    # Solid light blue
+    # TILE_SKY_IDX (index 5) at (40,0) - Solid
     tile_x_start = 40
-    for y_offset in range(8):
-        for x_offset in range(8):
-            img_bank.pset(tile_x_start + x_offset, 0 + y_offset, COLOR_SKY)
+    img_bank.rect(tile_x_start, 0, 8, 8, COLOR_SKY)
 
     print("Defined new forest tile patterns in image bank 0.")
 
