@@ -31,6 +31,16 @@ COLOR_TREE_LEAVES_PRIMARY = 11 # Light Green
 COLOR_TREE_LEAVES_SECONDARY = 3  # Dark Green
 COLOR_SKY = 12 # Light Blue
 
+# Tile UV String Constants for tm.set()
+# Format "UUVV" where UU is tile U-coord (in hex) and VV is tile V-coord (in hex)
+# All current tiles are in the first row of the image bank (V=0)
+TILE_UV_ORIGINAL_BACKGROUND = "0000" # TILE_BACKGROUND (0) -> u=0, v=0
+TILE_UV_ORIGINAL_GROUND = "0100"     # TILE_GROUND (1) -> u=1, v=0
+TILE_UV_FOREST_GROUND = "0200"       # TILE_FOREST_GROUND_IDX (2) -> u=2, v=0
+TILE_UV_TREE_TRUNK = "0300"          # TILE_TREE_TRUNK_IDX (3) -> u=3, v=0
+TILE_UV_TREE_LEAVES = "0400"         # TILE_TREE_LEAVES_IDX (4) -> u=4, v=0
+TILE_UV_SKY = "0500"                 # TILE_SKY_IDX (5) -> u=5, v=0
+
 def main():
     # Create assets directory if it doesn't exist
     if not os.path.exists(ASSETS_DIR):
@@ -111,8 +121,8 @@ def main():
     # Fill with sky
     for y in range(SCREEN_HEIGHT_TILES): # Iterate all rows first
         for x in range(SCREEN_WIDTH_TILES):
-            tm.set(x, y, [str(TILE_SKY_IDX)])
-    print(f"Filled tilemap 0 with sky tile ({TILE_SKY_IDX}).")
+            tm.set(x, y, [TILE_UV_SKY])
+    print(f"Filled tilemap 0 with sky tile (UV: {TILE_UV_SKY}, Concept: {TILE_SKY_IDX}).")
 
     # Place Trees (example positions)
     tree_positions_x = [5, 15, 25]
@@ -126,19 +136,19 @@ def main():
             # Ensure y is not negative if trees are very tall
             leaf_y = ground_level_y - tree_trunk_height - i
             if leaf_y >= 0:
-                 tm.set(tree_x, leaf_y, [str(TILE_TREE_LEAVES_IDX)])
+                 tm.set(tree_x, leaf_y, [TILE_UV_TREE_LEAVES])
         # Trunk
         for i in range(tree_trunk_height):
             trunk_y = ground_level_y - 1 - i
             if trunk_y >=0:
-                tm.set(tree_x, trunk_y, [str(TILE_TREE_TRUNK_IDX)])
-    print(f"Placed trees in tilemap 0.")
+                tm.set(tree_x, trunk_y, [TILE_UV_TREE_TRUNK])
+    print(f"Placed trees in tilemap 0 (Leaves UV: {TILE_UV_TREE_LEAVES}, Trunk UV: {TILE_UV_TREE_TRUNK}).")
 
     # Create forest ground platform (bottom 3 rows)
     for y_ground_offset in range(3): # 0, 1, 2
         for x in range(SCREEN_WIDTH_TILES):
-            tm.set(x, SCREEN_HEIGHT_TILES - 1 - y_ground_offset, [str(TILE_FOREST_GROUND_IDX)])
-    print(f"Created forest ground platform in tilemap 0 with tile ({TILE_FOREST_GROUND_IDX}).")
+            tm.set(x, SCREEN_HEIGHT_TILES - 1 - y_ground_offset, [TILE_UV_FOREST_GROUND])
+    print(f"Created forest ground platform in tilemap 0 with tile (UV: {TILE_UV_FOREST_GROUND}, Concept: {TILE_FOREST_GROUND_IDX}).")
 
     # --- Start Internal Tilemap Debug Inspection ---
     print("DEBUG: Internally inspecting tilemap 0 data BEFORE saving...")
