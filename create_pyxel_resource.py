@@ -13,9 +13,23 @@ SCREEN_HEIGHT_TILES = 24
 TILE_BACKGROUND = 0
 TILE_GROUND = 1
 
+# New Forest Tile IDs (start after existing 0 and 1)
+TILE_FOREST_GROUND_IDX = 2
+TILE_TREE_TRUNK_IDX = 3
+TILE_TREE_LEAVES_IDX = 4
+TILE_SKY_IDX = 5
+
 # Colors
 COLOR_BACKGROUND = 1  # Dark Blue
 COLOR_GROUND = 13     # Light Brown
+
+# New Forest Tile Colors
+COLOR_FOREST_GROUND_PRIMARY = 4  # Brown
+COLOR_FOREST_GROUND_SECONDARY = 3  # Dark Green
+COLOR_TREE_TRUNK = 4  # Brown
+COLOR_TREE_LEAVES_PRIMARY = 11 # Light Green
+COLOR_TREE_LEAVES_SECONDARY = 3  # Dark Green
+COLOR_SKY = 12 # Light Blue
 
 def main():
     # Create assets directory if it doesn't exist
@@ -52,37 +66,79 @@ def main():
     # Tile 1: Ground (light brown)
     # Tile 1 will be at (8,0) in the image bank
     img_bank.rect(8, 0, 8, 8, COLOR_GROUND)
-    print("Defined tile patterns in image bank 0.")
+    # Existing print statement for old tiles will be overwritten effectively by the new one if we replace it,
+    # or we can have multiple print statements. Let's keep it simple and let the new print statement reflect the latest action.
+
+    # TILE_FOREST_GROUND_IDX (index 2) at (16,0)
+    # Mottled brown/dark green
+    tile_x_start = 16
+    for y_offset in range(8):
+        for x_offset in range(8):
+            col = COLOR_FOREST_GROUND_PRIMARY if (x_offset + y_offset) % 2 == 0 else COLOR_FOREST_GROUND_SECONDARY
+            img_bank.pset(tile_x_start + x_offset, 0 + y_offset, col)
+
+    # TILE_TREE_TRUNK_IDX (index 3) at (24,0)
+    # Solid dark brown
+    tile_x_start = 24
+    for y_offset in range(8):
+        for x_offset in range(8):
+            img_bank.pset(tile_x_start + x_offset, 0 + y_offset, COLOR_TREE_TRUNK)
+
+    # TILE_TREE_LEAVES_IDX (index 4) at (32,0)
+    # Mottled light/dark green
+    tile_x_start = 32
+    for y_offset in range(8):
+        for x_offset in range(8):
+            col = COLOR_TREE_LEAVES_PRIMARY if (x_offset + y_offset) % 2 == 0 else COLOR_TREE_LEAVES_SECONDARY
+            img_bank.pset(tile_x_start + x_offset, 0 + y_offset, col)
+
+    # TILE_SKY_IDX (index 5) at (40,0)
+    # Solid light blue
+    tile_x_start = 40
+    for y_offset in range(8):
+        for x_offset in range(8):
+            img_bank.pset(tile_x_start + x_offset, 0 + y_offset, COLOR_SKY)
+
+    print("Defined new forest tile patterns in image bank 0.")
 
     # --- Set tiles in tilemap 0 ---
     # Get tilemap 0 - use pyxel.tilemaps[0] as per deprecation warning
     tm = pyxel.tilemaps[0]
 
-    # Fill the entire tilemap with the background tile (tile 0)
-    # Modifying to pass tile_id as a list, e.g., [TILE_BACKGROUND]
-    for y in range(SCREEN_HEIGHT_TILES):
-        for x in range(SCREEN_WIDTH_TILES):
-            # tm.set(tile_x, tile_y, tile_id_in_image_bank)
-            # Note: pyxel tilemaps store tile IDs as strings "ttxxii" where
-            # tt is tilemap, xx is tile_x, ii is tile_y.
-            # However, the API tm.set() uses integer tile IDs from the image bank.
-            # The actual tile ID in the image bank is what we use here.
-            # We defined tile 0 (background) at (0,0) and tile 1 (ground) at (8,0).
-            # Pyxel internally maps these to tile indices.
-            # For simplicity, let's assume the tile at (0,0) in image bank is tile index 0,
-            # and tile at (8,0) is tile index 1 if the image bank was laid out linearly.
-            # More accurately, pyxel.tilemap(0).set(x,y,0) refers to the 8x8 pixels
-            # starting at (0,0) in image bank 0 and pyxel.tilemap(0).set(x,y,1) refers
-            # to the 8x8 pixels starting at (8,0) in image bank 0
-            tm.set(x, y, [str(TILE_BACKGROUND)])
-    print(f"Filled tilemap 0 with background tile ({TILE_BACKGROUND}).")
+    # tm is pyxel.tilemaps[0]
+    # SCREEN_WIDTH_TILES and SCREEN_HEIGHT_TILES are 32 and 24
 
-    # Create a ground platform at the bottom (last 2 rows)
-    # Modifying to pass tile_id as a list of strings, e.g., [str(TILE_GROUND)]
-    for y in range(SCREEN_HEIGHT_TILES - 2, SCREEN_HEIGHT_TILES):
+    # Fill with sky
+    for y in range(SCREEN_HEIGHT_TILES): # Iterate all rows first
         for x in range(SCREEN_WIDTH_TILES):
-            tm.set(x, y, [str(TILE_GROUND)])
-    print(f"Created ground platform in tilemap 0 with ground tile ({TILE_GROUND}).")
+            tm.set(x, y, [str(TILE_SKY_IDX)])
+    print(f"Filled tilemap 0 with sky tile ({TILE_SKY_IDX}).")
+
+    # Place Trees (example positions)
+    tree_positions_x = [5, 15, 25]
+    tree_trunk_height = 3
+    tree_leaves_height = 3
+    ground_level_y = SCREEN_HEIGHT_TILES - 3 # Top Y of ground layer
+
+    for tree_x in tree_positions_x:
+        # Leaves
+        for i in range(tree_leaves_height):
+            # Ensure y is not negative if trees are very tall
+            leaf_y = ground_level_y - tree_trunk_height - i
+            if leaf_y >= 0:
+                 tm.set(tree_x, leaf_y, [str(TILE_TREE_LEAVES_IDX)])
+        # Trunk
+        for i in range(tree_trunk_height):
+            trunk_y = ground_level_y - 1 - i
+            if trunk_y >=0:
+                tm.set(tree_x, trunk_y, [str(TILE_TREE_TRUNK_IDX)])
+    print(f"Placed trees in tilemap 0.")
+
+    # Create forest ground platform (bottom 3 rows)
+    for y_ground_offset in range(3): # 0, 1, 2
+        for x in range(SCREEN_WIDTH_TILES):
+            tm.set(x, SCREEN_HEIGHT_TILES - 1 - y_ground_offset, [str(TILE_FOREST_GROUND_IDX)])
+    print(f"Created forest ground platform in tilemap 0 with tile ({TILE_FOREST_GROUND_IDX}).")
 
     # --- Save the resource file ---
     # The pyxel.save() function automatically saves to the path used in pyxel.load()
