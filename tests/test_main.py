@@ -17,7 +17,7 @@ class MockPyxel:
         self.width = 256
         self.height = 192
         self._btn_states = {}
-        self._btnp_states = {} # For btnp, can be more sophisticated if needed
+        self._btnp_states = {}  # For btnp, can be more sophisticated if needed
 
     def init(self, width, height, title=None, fps=None):
         self.width = width
@@ -33,20 +33,20 @@ class MockPyxel:
     def rect(self, x, y, w, h, color):
         pass
 
-    def bltm(self, *args, **kwargs): # Changed signature
+    def bltm(self, *args, **kwargs):  # Changed signature
         pass
 
-    def blt(self, *args, **kwargs): # Changed signature
+    def blt(self, *args, **kwargs):  # Changed signature
         pass
 
     def btn(self, key):
         return self._btn_states.get(key, False)
 
-    def btnp(self, key, hold=None, period=None): # Added hold and period params
+    def btnp(self, key, hold=None, period=None):  # Added hold and period params
         # Simple mock: behaves like btn for testing, or can be made more complex
         return self._btnp_states.get(key, False)
 
-    def play(self, ch, snd, loop=False): # Added loop param
+    def play(self, ch, snd, loop=False):  # Added loop param
         pass
 
     def run(self, update_func, draw_func):

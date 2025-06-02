@@ -87,9 +87,7 @@ def create_tile_patterns(img_bank: object) -> None:
     for r in range(8):  # row
         for c in range(8):  # column
             color = (
-                COLOR_FOREST_GROUND_PRIMARY
-                if (c + r) % 2 == 0
-                else COLOR_FOREST_GROUND_SECONDARY
+                COLOR_FOREST_GROUND_PRIMARY if (c + r) % 2 == 0 else COLOR_FOREST_GROUND_SECONDARY
             )
             img_bank.pset(tile_x_start + c, 0 + r, color)
 
@@ -101,11 +99,7 @@ def create_tile_patterns(img_bank: object) -> None:
     tile_x_start = 32
     for r in range(8):  # row
         for c in range(8):  # column
-            color = (
-                COLOR_TREE_LEAVES_PRIMARY
-                if (c + r) % 2 == 0
-                else COLOR_TREE_LEAVES_SECONDARY
-            )
+            color = COLOR_TREE_LEAVES_PRIMARY if (c + r) % 2 == 0 else COLOR_TREE_LEAVES_SECONDARY
             img_bank.pset(tile_x_start + c, 0 + r, color)
 
     # TILE_SKY_IDX (index 5) at (40,0) - Solid
@@ -121,9 +115,7 @@ def setup_tilemap(tm: object) -> None:
     for y in range(SCREEN_HEIGHT_TILES):  # Iterate all rows first
         for x in range(SCREEN_WIDTH_TILES):
             tm.set(x, y, [TILE_UV_SKY])
-    print(
-        f"Filled tilemap 0 with sky tile (UV: {TILE_UV_SKY}, Concept: {TILE_SKY_IDX})."
-    )
+    print(f"Filled tilemap 0 with sky tile (UV: {TILE_UV_SKY}, Concept: {TILE_SKY_IDX}).")
 
     # Place Trees (example positions)
     tree_positions_x = [5, 15, 25]
