@@ -1,13 +1,13 @@
-import sys
 import os
+import sys
 
 import pyxel
 
 # Game constants
 SCREEN_WIDTH = 256
 SCREEN_HEIGHT = 192
-PLAYER_WIDTH = 16 # Width of the player sprite
-PLAYER_HEIGHT = 16 # Height of the player sprite
+PLAYER_WIDTH = 16  # Width of the player sprite
+PLAYER_HEIGHT = 16  # Height of the player sprite
 # PLAYER_COLOR = 7  # White - No longer needed for rect drawing
 PLAYER_SPEED = 2
 
@@ -33,15 +33,14 @@ class Game:
             self.player_y = 160
             # If player_y was also global for tests, update it:
             if hasattr(main_module, "player_y"):
-                 main_module.player_y = self.player_y
-
+                main_module.player_y = self.player_y
 
         # Pyxel初期化処理
         pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="イチゲキーン", fps=30)
         # Determine the absolute path to the assets directory
-        script_path = os.path.abspath(__file__)      # Abs path to this script.
-        script_dir = os.path.dirname(script_path)    # Abs path to script's dir.
-        project_root = os.path.dirname(script_dir)   # Abs path to project root.
+        script_path = os.path.abspath(__file__)  # Abs path to this script.
+        script_dir = os.path.dirname(script_path)  # Abs path to script's dir.
+        project_root = os.path.dirname(script_dir)  # Abs path to project root.
         # Construct path to assets file, e.g., /path/to/project/assets/game.pyxres
         asset_path = os.path.join(project_root, "assets", "game.pyxres")
         pyxel.load(asset_path)
@@ -50,12 +49,12 @@ class Game:
         tm = pyxel.tilemaps[0]
         # Sample points: expected sky, tree, ground
         coords_to_check = {
-            "Top-left sky (0,0)": (0,0),
-            "Mid-sky (15,10)": (15,10),
-            "Tree top (5,15)": (5,15), # Expected: TILE_TREE_LEAVES_IDX (4)
-            "Tree trunk (5,18)": (5,18), # Expected: TILE_TREE_TRUNK_IDX (3)
-            "Ground (0,23)": (0,23),   # Expected: TILE_FOREST_GROUND_IDX (2)
-            "Ground (15,22)": (15,22)  # Expected: TILE_FOREST_GROUND_IDX (2)
+            "Top-left sky (0,0)": (0, 0),
+            "Mid-sky (15,10)": (15, 10),
+            "Tree top (5,15)": (5, 15),  # Expected: TILE_TREE_LEAVES_IDX (4)
+            "Tree trunk (5,18)": (5, 18),  # Expected: TILE_TREE_TRUNK_IDX (3)
+            "Ground (0,23)": (0, 23),  # Expected: TILE_FOREST_GROUND_IDX (2)
+            "Ground (15,22)": (15, 22),  # Expected: TILE_FOREST_GROUND_IDX (2)
         }
         for desc, (tx, ty) in coords_to_check.items():
             tile_val = tm.pget(tx, ty)
@@ -71,10 +70,13 @@ class Game:
         # TILE_SKY_IDX = 5 (at 40,0) -> Expected color: 12 (Light Blue)
 
         coords_to_check_img = {
-            "Sky tile pixel (40,0)": (40,0),      # Expected: COLOR_SKY (12)
-            "Sky tile pixel (43,3)": (43,3),      # Expected: COLOR_SKY (12)
-            "Forest ground pixel (16,0)": (16,0), # Expected: COLOR_FOREST_GROUND_PRIMARY/SECONDARY (4 or 3)
-            "Tree trunk pixel (24,0)": (24,0),    # Expected: COLOR_TREE_TRUNK (4)
+            "Sky tile pixel (40,0)": (40, 0),  # Expected: COLOR_SKY (12)
+            "Sky tile pixel (43,3)": (43, 3),  # Expected: COLOR_SKY (12)
+            "Forest ground pixel (16,0)": (
+                16,
+                0,
+            ),  # Expected: COLOR_FOREST_GROUND_PRIMARY/SECONDARY (4 or 3)
+            "Tree trunk pixel (24,0)": (24, 0),  # Expected: COLOR_TREE_TRUNK (4)
         }
         for desc, (px, py) in coords_to_check_img.items():
             pixel_val = img_bank.pget(px, py)
@@ -106,7 +108,7 @@ class Game:
 
         # Add sound effect on 'F' key press
         if pyxel.btnp(pyxel.KEY_F):
-            pyxel.play(0, 0) # Play sound 0 (attack) on channel 0
+            pyxel.play(0, 0)  # Play sound 0 (attack) on channel 0
 
         # Update globals for testing without using global statement inside methods
         self._update_globals()
@@ -127,7 +129,19 @@ class Game:
         # w, h: width and height in terms of number of tiles to draw
         #       pyxel.width and pyxel.height are in pixels.
         #       Since tiles are 8x8, pyxel.width/8 and pyxel.height/8 for full screen.
-        pyxel.bltm(0, 0, 0, 0, 0, pyxel.width // 8, pyxel.height // 8, 0)
+        # Don't use color 0 for transparency as our tiles may contain it
+        # 問題を解決するための別のアプローチを試す
+        # タイルマップの表示をデバッグするためのコード
+        for y in range(pyxel.height // 8):
+            for x in range(pyxel.width // 8):
+                tile_val = pyxel.tilemaps[0].pget(x, y)
+                if tile_val:
+                    # tile_valが(tile_index, rotation)のタプルなので最初の値を使用
+                    tile_idx = tile_val[0]
+                    # タイルインデックスに基づいて、イメージバンク0から対応する8x8タイルを描画
+                    u = (tile_idx * 8) % pyxel.width
+                    v = ((tile_idx * 8) // pyxel.width) * 8
+                    pyxel.blt(x * 8, y * 8, 0, u, v, 8, 8, 0)
 
         # Draw player sprite
         # blt(x, y, img, u, v, w, h, [colkey])
@@ -141,10 +155,10 @@ class Game:
             self.player_y,
             0,  # Image bank 0
             0,  # u (sprite sheet x for idle)
-            16, # v (sprite sheet y for idle)
+            16,  # v (sprite sheet y for idle)
             PLAYER_WIDTH,
             PLAYER_HEIGHT,
-            0   # Color key for transparency
+            0,  # Color key for transparency
         )
 
         # Old player drawing (rectangle) - commented out
@@ -156,7 +170,6 @@ class Game:
         #     PLAYER_COLOR, # PLAYER_COLOR was defined as 7 (white)
         # )
 
-
     def run(self):
         pyxel.run(self.update, self.draw)
 
@@ -165,7 +178,7 @@ class Game:
 # These values will be overwritten by Game.__init__ if game is run directly,
 # but tests might rely on them being here.
 player_x = SCREEN_WIDTH / 2 - PLAYER_WIDTH / 2
-player_y = 160 # Consistent with Game.__init__ initial position
+player_y = 160  # Consistent with Game.__init__ initial position
 player_width = PLAYER_WIDTH
 player_height = PLAYER_HEIGHT
 player_speed = PLAYER_SPEED
