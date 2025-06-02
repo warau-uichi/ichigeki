@@ -44,9 +44,6 @@ class Game:
         project_root = os.path.dirname(script_dir)   # Abs path to project root.
         # Construct path to assets file, e.g., /path/to/project/assets/game.pyxres
         asset_path = os.path.join(project_root, "assets", "game.pyxres")
-
-        # The debug print can be kept for one more verification or removed. Let's keep it for now.
-        print(f"Attempting to load asset from: {asset_path}") # DEBUG LINE
         pyxel.load(asset_path)
 
         # Expose properties for testing
@@ -85,25 +82,37 @@ class Game:
         player_x = self.player_x
 
     def draw(self):
-        pyxel.cls(0)  # Clear screen with black (optional if tilemap covers all)
+        pyxel.cls(0)  # Clear screen with black
 
-        # Draw the stage tilemap (tilemap 0)
-        # bltm(x, y, tm, u, v, w, h, [colkey])
-        # x, y: screen coordinates to draw at
-        # tm: tilemap index (0)
-        # u, v: tilemap source coordinates (top-left tile to start drawing from)
-        # w, h: width and height in terms of number of tiles to draw
-        #       pyxel.width and pyxel.height are in pixels.
-        #       Since tiles are 8x8, pyxel.width/8 and pyxel.height/8 for full screen.
-        pyxel.bltm(0, 0, 0, 0, 0, pyxel.width // 8, pyxel.height // 8, 0)
+        # Draw tilemap manually
+        tilemap_to_draw = pyxel.tilemaps[0]
+        screen_tiles_x = pyxel.width // 8
+        screen_tiles_y = pyxel.height // 8
 
-        # Draw player sprite
-        # blt(x, y, img, u, v, w, h, [colkey])
-        # x, y: screen coordinates
-        # img: image bank index (0)
-        # u, v: image bank source coordinates (top-left of sprite)
-        # w, h: width and height of sprite
-        # colkey: transparency color (0 for black, typically)
+        for y_idx_on_screen in range(screen_tiles_y):
+            for x_idx_on_screen in range(screen_tiles_x):
+                # pget(x,y) on tilemap returns a tuple:
+                # (tile_X_in_image_bank_in_8px_units, tile_Y_in_image_bank_in_8px_units)
+                tile_bank_u_v_tuple = tilemap_to_draw.pget(x_idx_on_screen, y_idx_on_screen)
+
+                # Get U and V tile coordinates from the tuple
+                u_tile_in_bank = tile_bank_u_v_tuple[0]
+                v_tile_in_bank = tile_bank_u_v_tuple[1]
+
+                # Convert tile U,V coordinates to pixel U,V coordinates for blt
+                u_pixel_in_bank = u_tile_in_bank * 8
+                v_pixel_in_bank = v_tile_in_bank * 8
+
+                pyxel.blt(x_idx_on_screen * 8,    # screen x to draw at
+                          y_idx_on_screen * 8,    # screen y to draw at
+                          0,                      # image bank 0
+                          u_pixel_in_bank,        # source x in image bank
+                          v_pixel_in_bank,        # source y in image bank
+                          8,                      # width of tile to draw
+                          8,                      # height of tile to draw
+                          0)                      # color key for transparency (black)
+
+        # Draw player sprite (this part remains the same)
         pyxel.blt(
             self.player_x,
             self.player_y,
@@ -114,15 +123,6 @@ class Game:
             PLAYER_HEIGHT,
             0   # Color key for transparency
         )
-
-        # Old player drawing (rectangle) - commented out
-        # pyxel.rect(
-        #     self.player_x,
-        #     self.player_y,
-        #     PLAYER_WIDTH,
-        #     PLAYER_HEIGHT,
-        #     PLAYER_COLOR, # PLAYER_COLOR was defined as 7 (white)
-        # )
 
 
     def run(self):
