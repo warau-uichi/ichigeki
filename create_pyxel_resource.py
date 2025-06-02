@@ -120,21 +120,26 @@ def main():
     tree_positions_x = [5, 15, 25]
     tree_trunk_height = 3
     tree_leaves_height = 3
-    ground_level_y = SCREEN_HEIGHT_TILES - 3 # Top Y of ground layer
+    # ground_level_y is the first row of the ground, e.g. SCREEN_HEIGHT_TILES - 3
+    # For calculations, let's use the y-coordinate of the tile *just above* the ground,
+    # which is where the base of the trunk would sit.
+    base_of_trunk_y = SCREEN_HEIGHT_TILES - 3 - 1 # e.g., 24 - 3 - 1 = 20
 
     for tree_x in tree_positions_x:
-        # Leaves
-        for i in range(tree_leaves_height):
-            # Ensure y is not negative if trees are very tall
-            leaf_y = ground_level_y - tree_trunk_height - i
+        # Place Trunks first, from bottom up
+        for i in range(tree_trunk_height): # i = 0, 1, 2
+            trunk_y = base_of_trunk_y - i  # y = 20, 19, 18
+            if trunk_y >= 0:
+                tm.set(tree_x, trunk_y, [TILE_UV_TREE_TRUNK])
+
+        # Place Leaves above the trunk
+        # Topmost trunk was at y = base_of_trunk_y - tree_trunk_height + 1
+        top_trunk_y = base_of_trunk_y - tree_trunk_height + 1 # y = 20 - 3 + 1 = 18
+        for i in range(tree_leaves_height): # i = 0, 1, 2
+            leaf_y = top_trunk_y - 1 - i # y = 17, 16, 15
             if leaf_y >= 0:
                  tm.set(tree_x, leaf_y, [TILE_UV_TREE_LEAVES])
-        # Trunk
-        for i in range(tree_trunk_height):
-            trunk_y = ground_level_y - 1 - i
-            if trunk_y >=0:
-                tm.set(tree_x, trunk_y, [TILE_UV_TREE_TRUNK])
-    print(f"Placed trees in tilemap 0 (Leaves UV: {TILE_UV_TREE_LEAVES}, Trunk UV: {TILE_UV_TREE_TRUNK}).")
+    print(f"Placed trees with distinct trunk/leaf layers in tilemap 0.")
 
     # Create forest ground platform (bottom 3 rows)
     for y_ground_offset in range(3): # 0, 1, 2
@@ -142,27 +147,6 @@ def main():
             tm.set(x, SCREEN_HEIGHT_TILES - 1 - y_ground_offset, [TILE_UV_FOREST_GROUND])
     print(f"Created forest ground platform in tilemap 0 with tile (UV: {TILE_UV_FOREST_GROUND}, Concept: {TILE_FOREST_GROUND_IDX}).")
 
-    # --- Start Internal Tilemap Debug Inspection ---
-    print("DEBUG: Internally inspecting tilemap 0 data BEFORE saving...")
-    # Ensure tm is the correct tilemap object, it should be pyxel.tilemaps[0]
-    # If tm was a local variable in a previous scope, re-get it:
-    # tm_debug = pyxel.tilemaps[0]
-    # However, tm should still be in scope if defined earlier in main()
-    # Assuming 'tm' (pyxel.tilemaps[0]) is still in scope and correctly modified:
-    try:
-        # tm was defined as: tm = pyxel.tilemaps[0]
-        debug_tile_val_0_0 = tm.pget(0, 0) # Expected TILE_SKY_IDX (5), which is tile at (40,0) in image bank
-        print(f"DEBUG: Internal pget(0,0) (sky): {debug_tile_val_0_0}")
-
-        debug_tile_val_0_23 = tm.pget(0, 23) # Expected TILE_FOREST_GROUND_IDX (2), which is tile at (16,0)
-        print(f"DEBUG: Internal pget(0,23) (ground): {debug_tile_val_0_23}")
-
-        debug_tile_val_5_18 = tm.pget(5, 18) # Expected TILE_TREE_TRUNK_IDX (3), which is tile at (24,0)
-        print(f"DEBUG: Internal pget(5,18) (tree trunk): {debug_tile_val_5_18}")
-
-    except Exception as e:
-        print(f"DEBUG: Error during internal pget: {e}")
-    print("DEBUG: --- End Internal Tilemap Debug Inspection ---")
     # --- Save the resource file ---
     # The pyxel.save() function automatically saves to the path used in pyxel.load()
     # or if not loaded, to a path derived from the script name if init was used
